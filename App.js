@@ -3,7 +3,7 @@
 import App from "./app/app.tsx"
 import React from "react"
 import { registerRootComponent } from "expo"
-import { Platform } from "react-native"
+import { Platform, AppRegistry } from "react-native"
 import * as SplashScreen from "expo-splash-screen"
 
 SplashScreen.preventAutoHideAsync()
@@ -16,4 +16,7 @@ if (Platform.OS !== "web") {
   registerRootComponent(IgniteApp)
 }
 
-export default IgniteApp
+AppRegistry.registerComponent("TaxiApp", () => IgniteApp)
+export default App
+
+//export default IgniteApp

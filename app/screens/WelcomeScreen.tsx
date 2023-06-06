@@ -8,7 +8,7 @@ import { StyleSheet, View, Image, TouchableOpacity } from "react-native"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "app/models"
 
-const welcomeLogo = require("../../assets/images/touring-logo.png")
+const welcomeLogo = require("../../assets/images/logo.png")
 
 interface WelcomeScreenProps extends NativeStackScreenProps<AppStackScreenProps<"Welcome">> {}
 

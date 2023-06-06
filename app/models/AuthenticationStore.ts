@@ -9,7 +9,15 @@ import { UserModel } from "./User"
 
 export const AuthenticationStoreModel = types
   .model("AuthenticationStore", {
-    User: types.optional(UserModel, {}),
+    User: types.optional(UserModel, {
+      id: 1,
+      name: "Test User",
+      email: "test@test.com",
+      age: 25,
+      gender: "male",
+      hobbies: ["coding", "reading", "gaming"],
+      friends: [],
+    }),
   })
   .props({
     // Use User model for profile
