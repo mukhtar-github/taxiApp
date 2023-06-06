@@ -1,29 +1,40 @@
-import React from 'react'
+import React, { FC } from "react"
 import { observer } from "mobx-react-lite"
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native"
+import { ViewStyle } from "react-native"
+import { NativeStackScreenProps } from "@react-navigation/native-stack"
+import { AppStackScreenProps } from "app/navigators"
+import { Screen, Text } from "app/components"
+import { StyleSheet, View, Image, TouchableOpacity } from "react-native"
+// import { useNavigation } from "@react-navigation/native"
+// import { useStores } from "app/models"
 
 const welcomeLogo = require("../../assets/images/touring-logo.png")
 
- export interface WelcomeScreenProps {
-  // Define any additional props you need
-}
+interface WelcomeScreenProps extends NativeStackScreenProps<AppStackScreenProps<"Welcome">> {}
 
-export const WelcomeScreen = observer((props:WelcomeScreenProps, { navigation }) => {
+export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeScreen(
+  props:WelcomeScreenProps, { navigation }
+) {
+  // Pull in one of our MST stores
+  // const { someStore, anotherStore } = useStores()
+
+  // Pull in navigation via hook
+  // const navigation = useNavigation()
   return (
     <View style={styles.container}>
-      <View style={styles.logoContainer}>
-        <Image source={welcomeLogo} />
-      </View>
-      <Text style={styles.tagline}>Book from Anywhere</Text>
-      <View style={styles.buttonsContainer}>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Register')}>
-          <Text style={styles.buttonText}>Sign Up</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Login')}>
-          <Text style={styles.buttonText}>Already have an account? Login</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+//       <View style={styles.logoContainer}>
+//         <Image source={welcomeLogo} />
+//       </View>
+//       <Text style={styles.tagline}>Book from Anywhere</Text>
+//       <View style={styles.buttonsContainer}>
+//         <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Register')}>
+//           <Text style={styles.buttonText}>Sign Up</Text>
+//         </TouchableOpacity>
+//         <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Login')}>
+//           <Text style={styles.buttonText}>Already have an account? Login</Text>
+//         </TouchableOpacity>
+//       </View>
+//     </View>
   )
 })
 
@@ -62,3 +73,13 @@ const styles = StyleSheet.create({
     color: "#333",
   },
 });
+
+
+{/* <Screen style={$root} preset="scroll">
+      <Text text="welcome" />
+    </Screen> */}
+
+// const $root: ViewStyle = {
+//   flex: 1,
+// }
+

@@ -1,147 +1,114 @@
+import React, { FC, useState } from "react"
 import { observer } from "mobx-react-lite"
-import React, { useEffect, useMemo, useRef, useState } from "react"
-import { TextInput, TextStyle, ViewStyle } from "react-native"
-import { Button, Icon, Screen, Text, TextField, TextFieldAccessoryProps } from "../components"
-import { useStores } from "../models"
-import { AppStackScreenProps } from "../navigators"
-import { colors, spacing } from "../theme"
+import { ViewStyle } from "react-native"
+import { NativeStackScreenProps } from "@react-navigation/native-stack"
+import { AppStackScreenProps, AppStackParamList } from "app/navigators"
+import { Screen, Text } from "app/components"
+import { useNavigation } from "@react-navigation/native"
+import { useStores } from "app/models"
+import { View, TextInput, StyleSheet, Button, TouchableOpacity } from 'react-native'
 
-export interface LoginScreenProps extends AppStackScreenProps<"Login"> {}
+// interface LoginScreenProps extends NativeStackScreenProps<AppStackScreenProps<"Login">> {
+//   Home: undefined
+// }
+interface LoginScreenProps extends NativeStackScreenProps<AppStackParamList, "Login"> {}
 
-export const LoginScreen = observer((props: LoginScreenProps) => {
-  const authPasswordInput = useRef<TextInput>()
 
-  const [authPassword, setAuthPassword] = useState("")
-  const [isAuthPasswordHidden, setIsAuthPasswordHidden] = useState(true)
-  const [isSubmitted, setIsSubmitted] = useState(false)
-  const [attemptsCount, setAttemptsCount] = useState(0)
-  const {
-    authenticationStore: { authEmail, setAuthEmail, setAuthToken, validationError },
-  } = useStores()
+export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen({ navigation }) {
+  // Pull in one of our MST stores
+  // const { someStore, anotherStore } = useStores()
 
-  useEffect(() => {
-    // Here is where you could fetch credentials from keychain or storage
-    // and pre-fill the form fields.
-    setAuthEmail("ignite@infinite.red")
-    setAuthPassword("ign1teIsAwes0m3")
-  }, [])
+  // Pull in navigation via hook
+  // const navigation = useNavigation()
 
-  const error = isSubmitted ? validationError : ""
+  // Use state variables to store the user's input
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  // const navigation = useNavigation()
 
-  function login() {
-    setIsSubmitted(true)
-    setAttemptsCount(attemptsCount + 1)
+  // Destructure the authenticationStore object from useStores
+  const { authenticationStore } = useStores()
 
-    if (validationError) return
-
-    // Make a request to your server to get an authentication token.
-    // If successful, reset the fields and set the token.
-    setIsSubmitted(false)
-    setAuthPassword("")
-    setAuthEmail("")
-
-    // We'll mock this with a fake token.
-    setAuthToken(String(Date.now()))
+  // Define a function to handle the login button press
+  const handleLogin = () => {
+    // Call the login action from authenticationStore with username and password
+    authenticationStore.login(username, password)
+    // If login is successful, navigate to home screen
+    if (authenticationStore.isAuthenticated) {
+      navigation.navigate('Home')
+    }
   }
 
-  const PasswordRightAccessory = useMemo(
-    () =>
-      function PasswordRightAccessory(props: TextFieldAccessoryProps) {
-        return (
-          <Icon
-            icon={isAuthPasswordHidden ? "view" : "hidden"}
-            color={colors.palette.neutral800}
-            containerStyle={props.style}
-            size={20}
-            onPress={() => setIsAuthPasswordHidden(!isAuthPasswordHidden)}
-          />
-        )
-      },
-    [isAuthPasswordHidden],
-  )
-
-  useEffect(() => {
-    return () => {
-      setAuthPassword("")
-      setAuthEmail("")
-    }
-  }, [])
-
   return (
-    <Screen
-      preset="auto"
-      contentContainerStyle={$screenContentContainer}
-      safeAreaEdges={["top", "bottom"]}
-    >
-      <Text testID="login-heading" tx="loginScreen.signIn" preset="heading" style={$signIn} />
-      <Text tx="loginScreen.enterDetails" preset="subheading" style={$enterDetails} />
-      {attemptsCount > 2 && <Text tx="loginScreen.hint" size="sm" weight="light" style={$hint} />}
-
-      <TextField
-        value={authEmail}
-        onChangeText={setAuthEmail}
-        containerStyle={$textField}
-        autoCapitalize="none"
-        autoComplete="email"
-        autoCorrect={false}
-        keyboardType="email-address"
-        labelTx="loginScreen.emailFieldLabel"
-        placeholderTx="loginScreen.emailFieldPlaceholder"
-        helper={error}
-        status={error ? "error" : undefined}
-        onSubmitEditing={() => authPasswordInput.current?.focus()}
+    <View style={styles.container}>
+      {/* Display the inputs for username and password */}
+      <Text style={styles.title}>Login</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Enter username"
+        value={username}
+        onChangeText={setUsername}
       />
-
-      <TextField
-        ref={authPasswordInput}
-        value={authPassword}
-        onChangeText={setAuthPassword}
-        containerStyle={$textField}
-        autoCapitalize="none"
-        autoComplete="password"
-        autoCorrect={false}
-        secureTextEntry={isAuthPasswordHidden}
-        labelTx="loginScreen.passwordFieldLabel"
-        placeholderTx="loginScreen.passwordFieldPlaceholder"
-        onSubmitEditing={login}
-        RightAccessory={PasswordRightAccessory}
+      <TextInput
+        style={styles.input}
+        placeholder="Enter password"
+        secureTextEntry={true}
+        value={password}
+        onChangeText={setPassword}
       />
-
-      <Button
-        testID="login-button"
-        tx="loginScreen.tapToSignIn"
-        style={$tapButton}
-        preset="reversed"
-        onPress={login}
-      />
-    </Screen>
+      {/* Display the login button */}
+      <Button title="Login" color="#32cd32" onPress={handleLogin} />
+      {/* Display the tagline for sign up */}
+      <Text style={styles.tagline}>
+        New to Taxi App?{' '}
+        // Use navigation.navigate to go to register screen
+        <Text style={styles.link} onPress={() => navigation.navigate('Register')}>
+          Sign Up
+        </Text>
+      </Text>
+    </View>
   )
 })
 
-const $screenContentContainer: ViewStyle = {
-  paddingVertical: spacing.xxl,
-  paddingHorizontal: spacing.lg,
-}
+// Define the styles for the screen
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  input: {
+    width: '100%',
+    height: 40,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 10,
+    padding: 10,
+    marginVertical: 10,
+  },
+  tagline: {
+    fontSize: 16,
+    marginVertical: 10,
+  },
+  link: {
+    color: '#0000ff',
+    textDecorationLine: 'underline',
+  },
+})
 
-const $signIn: TextStyle = {
-  marginBottom: spacing.sm,
-}
 
-const $enterDetails: TextStyle = {
-  marginBottom: spacing.lg,
-}
 
-const $hint: TextStyle = {
-  color: colors.tint,
-  marginBottom: spacing.md,
-}
+{/* <Screen style={$root} preset="scroll">
+      <Text text="login" />
+    </Screen> */}
 
-const $textField: ViewStyle = {
-  marginBottom: spacing.lg,
-}
-
-const $tapButton: ViewStyle = {
-  marginTop: spacing.xs,
-}
-
-// @demo remove-file
+// const $root: ViewStyle = {
+//   flex: 1,
+// }

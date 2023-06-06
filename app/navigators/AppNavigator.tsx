@@ -4,25 +4,16 @@
  * Generally speaking, it will contain an auth flow (registration, login, forgot password)
  * and a "main" flow which the user will use once logged in.
  */
-import {
-  DarkTheme,
-  DefaultTheme,
-  NavigationContainer,
-} from "@react-navigation/native"
+import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native"
 import { createNativeStackNavigator, NativeStackScreenProps } from "@react-navigation/native-stack"
 import { observer } from "mobx-react-lite"
 import React from "react"
 import { useColorScheme } from "react-native"
 import Config from "../config"
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
-import {
-  LoadingScreen,
-  WelcomeScreen,
-  LoginScreen,
-  RegisterScreen,
-  HomeScreen
-} from "app/screens"
-// import { colors } from "app/theme"
+import { WelcomeScreen, LoginScreen, RegisterScreen, HomeScreen } from "app/screens"
+import { useStores } from "app/models"
+import { AuthenticationStore } from "app/models"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -38,13 +29,14 @@ import {
  *   https://reactnavigation.org/docs/typescript/#organizing-types
  */
 export type AppStackParamList = {
-  Loading: undefined;
-  Welcome: undefined;
+  // 🔥 Your screens go here
+ Welcome: undefined;
+  Booking: { destination: string };
   Login: undefined;
   Register: undefined;
   Home: undefined;
-  // 🔥 Your screens go here
-  // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
+  TermsAndConditions: undefined;
+	// IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
 }
 
 /**
@@ -64,14 +56,23 @@ export type AppStackScreenProps<T extends keyof AppStackParamList> = NativeStack
 const Stack = createNativeStackNavigator<AppStackParamList>()
 
 const AppStack = observer(function AppStack() {
+  const {
+    authenticationStore: { isAuthenticated },
+  } = useStores()
+
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="Loading" component={LoadingScreen} />
-      <Stack.Screen name="Welcome" component={WelcomeScreen} />
-      <Stack.Screen name="Login" component={LoginScreen} />
-      <Stack.Screen name="Register" component={RegisterScreen} />
-      <Stack.Screen name="Home" component={HomeScreen} />
-      {/* Add other screens as needed */}
+     <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Welcome" >
+      {isAuthenticated ? (
+        // Show home screen after user is authenticated
+        <Stack.Screen name="Home" component={HomeScreen} />
+      ) : (
+        // Show welcome screen as initial screen
+        <>
+          <Stack.Screen name="Welcome" component={WelcomeScreen} />
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Register" component={RegisterScreen} />
+        </>
+      )}
     </Stack.Navigator>
   )
 })
