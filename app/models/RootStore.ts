@@ -7,8 +7,8 @@ import { EpisodeStoreModel } from "./EpisodeStore" // @demo remove-current-line
  * A RootStore model.
  */
 export const RootStoreModel = types.model("RootStore").props({
-  authenticationStore: types.optional(AuthenticationStoreModel, {} as any),
-  user: UserModel,
+  authenticationStore: types.optional(AuthenticationStoreModel, {}),
+  User: types.optional(UserModel, {}),
   episodeStore: types.optional(EpisodeStoreModel, {}), // @demo remove-current-line
 })
 

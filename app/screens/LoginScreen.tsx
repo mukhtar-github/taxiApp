@@ -61,7 +61,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen({
       {/* Display the tagline for sign up */}
       <Text style={styles.tagline}>
         New to Taxi App?{' '}
-        // Use navigation.navigate to go to register screen
+        {/* Use navigation.navigate to go to register screen */}
         <Text style={styles.link} onPress={() => navigation.navigate('Register')}>
           Sign Up
         </Text>

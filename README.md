@@ -129,3 +129,13 @@ Follow our [Maestro Setup](https://ignitecookbook.com/docs/recipes/MaestroSetup)
 - [2016 aka Ignite 1.0](https://github.com/infinitered/ignite-ir-boilerplate-2016)
 
 # taxiApp
+
+Invariant Violation: "main" has not been registered.
+Where "main" can be any string.
+
+What this error means
+An exception may be preventing your app from registering itself
+The most common cause of this error is that there is an exception thrown in your application before it's able to register itself. When a React Native application loads, there are two steps:
+
+Load the JavaScript code, and if everything is successful, then your application will be registered. If there is any exception when loading the bundle then execution will be aborted and it will never reach the part where your application is registered.
+Run the registered application. If loading the code failed, then the application won't be registered and you will see the error that is the subject of this page.

@@ -13,7 +13,7 @@ import Config from "../config"
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 import { WelcomeScreen, LoginScreen, RegisterScreen, HomeScreen } from "app/screens"
 import { useStores } from "app/models"
-import { AuthenticationStore } from "app/models"
+//import { AuthenticationStore } from "app/models"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator

@@ -68,7 +68,7 @@ export const RegisterScreen: FC<RegisterScreenProps> = observer(function Registe
       {/* Display the tagline for terms and conditions */}
       <Text style={styles.tagline}>
         By signing up you agree to the{' '}
-        // Use navigation.navigate to go to terms and conditions screen
+        {/* Use navigation.navigate to go to terms and conditions screen */}
         <Text style={styles.link} onPress={() => navigation.navigate('TermsAndConditions')}>
           Terms & Conditions
         </Text>
@@ -78,7 +78,7 @@ export const RegisterScreen: FC<RegisterScreenProps> = observer(function Registe
       {/* Display the tagline for login */}
       <Text style={styles.tagline}>
         Already have an account?{' '}
-        // Use navigation.navigate to go to login screen
+        {/* Use navigation.navigate to go to login screen */}
         <Text style={styles.link} onPress={() => navigation.navigate('Login')}>
           Login
         </Text>
