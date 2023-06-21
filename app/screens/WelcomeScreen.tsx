@@ -1,40 +1,50 @@
 import React, { FC } from "react"
 import { observer } from "mobx-react-lite"
-import { ViewStyle } from "react-native"
 import { NativeStackScreenProps } from "@react-navigation/native-stack"
-import { AppStackScreenProps } from "app/navigators"
-import { Screen, Text } from "app/components"
-import { StyleSheet, View, Image, TouchableOpacity } from "react-native"
+import { AppStackParamList } from "app/navigators"
+import { StyleSheet, View, Image, Text, TouchableOpacity } from "react-native"
 // import { useNavigation } from "@react-navigation/native"
+// import { Screen, Text } from "app/components"
+// import {AppStackScreenProps } from "app/navigators"
 // import { useStores } from "app/models"
+// import { ViewStyle } from "react-native"
+// import { useHeader } from "../utils/useHeader"
+
 
 const welcomeLogo = require("../../assets/images/logo.png")
 
-interface WelcomeScreenProps extends NativeStackScreenProps<AppStackScreenProps<"Welcome">> {}
+interface WelcomeScreenProps extends NativeStackScreenProps<AppStackParamList, "Welcome"> {}
 
-export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeScreen(
-  props:WelcomeScreenProps, { navigation }
-) {
-  // Pull in one of our MST stores
-  // const { someStore, anotherStore } = useStores()
+export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeScreen({ navigation }){
 
-  // Pull in navigation via hook
-  // const navigation = useNavigation()
+  // Define the handler for navigating to the RegisterScreen
+  const handleRegister = () => {
+    navigation.navigate("Register");
+  };
+
+  // Define the handler for navigating to the LoginScreen
+  const handleLogin = () => {
+    navigation.navigate("Login");
+  };
+
   return (
     <View style={styles.container}>
-//       <View style={styles.logoContainer}>
-//         <Image source={welcomeLogo} />
-//       </View>
-//       <Text style={styles.tagline}>Book from Anywhere</Text>
-//       <View style={styles.buttonsContainer}>
-//         <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Register')}>
-//           <Text style={styles.buttonText}>Sign Up</Text>
-//         </TouchableOpacity>
-//         <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Login')}>
-//           <Text style={styles.buttonText}>Already have an account? Login</Text>
-//         </TouchableOpacity>
-//       </View>
-//     </View>
+      <View style={styles.logoContainer}>
+        <Image source={welcomeLogo} />
+      </View>
+      <Text style={styles.tagline}>Book from Anywhere</Text>
+      <View style={styles.buttonsContainer}>
+        <TouchableOpacity style={styles.button} onPress={handleRegister}>
+          <Text style={styles.buttonText}>Sign Up</Text>
+        </TouchableOpacity>
+        <Text style={styles.tagline2}>
+          Already have an account?{' '}
+        <Text style={styles.link} onPress={handleLogin}>
+          Login
+        </Text>
+      </Text>
+      </View>
+    </View>
   )
 })
 
@@ -72,14 +82,14 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#333",
   },
+  tagline2: {
+    fontSize: 16,
+    marginVertical: 10,
+  },
+  link: {
+    color: '#0000ff',
+    textDecorationLine: 'underline',
+    marginVertical: 10,
+  },
 });
-
-
-{/* <Screen style={$root} preset="scroll">
-      <Text text="welcome" />
-    </Screen> */}
-
-// const $root: ViewStyle = {
-//   flex: 1,
-// }
 
