@@ -4303,3 +4303,179 @@ color: '#00f',
 // marginVertical: 10,
 // },
 // })
+
+// import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native"
+// import { createNativeStackNavigator, NativeStackScreenProps } from "@react-navigation/native-stack"
+// import { observer } from "mobx-react-lite"
+// import React from "react"
+// import { useColorScheme } from "react-native"
+// import Config from "../config"
+// import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
+// import { WelcomeScreen, LoginScreen, RegisterScreen, HomeScreen } from "app/screens"
+// import { useStores } from "app/models"
+// import { AuthenticationStore } from "app/models"
+// import { createStackNavigator } from "@react-navigation/stack";
+
+/\*\*
+
+- This type allows TypeScript to know what routes are defined in this navigator
+- as well as what properties (if any) they might take when navigating to them.
+-
+- If no params are allowed, pass through `undefined`. Generally speaking, we
+- recommend using your MobX-State-Tree store(s) to keep application state
+- rather than passing state through navigation params.
+-
+- For more information, see this documentation:
+- https://reactnavigation.org/docs/params/
+- https://reactnavigation.org/docs/typescript#type-checking-the-navigator
+- https://reactnavigation.org/docs/typescript/#organizing-types
+  \*/
+
+// export type AppStackParamList = {
+// // 🔥 Your screens go here
+// Welcome: undefined;
+// Booking: { destination: string };
+// Login: undefined;
+// Register: undefined;
+// Home: undefined;
+// TermsAndConditions: undefined;
+// // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
+// }
+
+/\*\*
+
+- This is a list of all the route names that will exit the app if the back button
+- is pressed while in that screen. Only affects Android.
+  \*/
+
+// export type AppStackScreenProps<T extends keyof AppStackParamList> = NativeStackScreenProps<
+// AppStackParamList,
+// T
+// >
+
+// // Documentation: https://reactnavigation.org/docs/stack-navigator/
+
+// const Stack = createNativeStackNavigator<AppStackParamList>()
+
+// const AppStack = observer(function AppStack() {
+// const {
+// authenticationStore: { isAuthenticated },
+// } = useStores()
+
+// console.log("isAuthenticated:", isAuthenticated)
+
+// return (
+
+<!-- //      <Stack.Navigator screenOptions={{ headerShown: // false }} initialRouteName={isAuthenticated ? "Home" : "Welcome"} > -->
+
+// {isAuthenticated ? (
+// // Show home screen after user is authenticated
+// <Stack.Screen name="Home" component={HomeScreen} />
+// ) : (
+// // Show welcome screen as initial screen
+// <>
+// <Stack.Screen name="Welcome" component={WelcomeScreen} />
+// <Stack.Screen name="Login" component={LoginScreen} />
+// <Stack.Screen name="Register" component={RegisterScreen} />
+// </>
+// )}
+// </Stack.Navigator>
+// )
+// })
+
+// export const AuthenticationStoreModel = types
+// .model("AuthenticationStore", {
+// profile: types.maybe(UserModel), // Use `types.maybe` to allow null or undefined
+// token: types.maybe(types.string), // Use `types.maybe` to allow null or undefined
+// error: types.maybe(types.string), // Use `types.maybe` to allow null or undefined
+// loading: types.optional(types.boolean, false),
+
+// })
+// .props({
+// // Additional properties for the store
+// })
+// .actions(withSetPropAction)
+// .views((self) => ({
+// // Define the isAuthenticated view
+// get isAuthenticated() {
+// return !!self.token
+// },
+// }))
+// .actions((self) => {
+// return {
+// // Modify register action to accept email as a parameter and use it for validation and testing
+// register: flow(function* (mobileNumber: string, userName: string, password: string, email: string) {
+// self.error = ""
+// self.loading = true
+// try {
+// // Use mock mobile number, user name, password, and email for validation
+// if (mobileNumber === "1234567890" && userName === "test" && password === "test" && email === "test@test.com") {
+// // Use mock token and profile for testing
+// self.token = "mock-token"
+// self.profile = UserModel.create({
+// id: 1,
+// name: "Test User",
+// email: "test@test.com",
+// age: 25,
+// gender: "male",
+// hobbies: ["coding", "reading", "gaming"],
+// friends: [],
+// })
+// } else {
+// throw new Error("Invalid mobile number, user name, password, or email")
+// }
+// } catch (error) {
+// self.error = error.message
+// } finally {
+// self.loading = false
+// }
+// }),
+// // Rest of the actions...
+// // Modify login action to use mock data for testing
+// login: flow(function* (username: string, password: string) {
+// self.error = ""
+// self.loading = true
+// try {
+// // Use mock username and password for validation
+// if (username === "test" && password === "test") {
+// // Use mock token and profile for testing
+// self.token = "mock-token"
+// self.profile = UserModel.create({
+// id: 1,
+// name: "Test User",
+// email: "test@test.com",
+// age: 25,
+// gender: "male",
+// hobbies: ["coding", "reading", "gaming"],
+// friends: [],
+// })
+// } else {
+// throw new Error("Invalid username or password")
+// }
+// } catch (error) {
+// self.error = error.message
+// } finally {
+// self.loading = false
+// }
+// }),
+// // Modify logout action to clear profile
+// logout() {
+// self.token = ""
+// self.profile = UserModel.create({
+// id: 0,
+// name: "",
+// email: "",
+// mobileNumber: "",
+// age: 0,
+// gender: "",
+// hobbies: [],
+// friends: [],
+// })
+// },
+// }
+// })
+
+// export interface AuthenticationStore extends Instance<typeof AuthenticationStoreModel> { }
+// export interface AuthenticationStoreSnapshotOut extends SnapshotOut<typeof AuthenticationStoreModel> { }
+// export interface AuthenticationStoreSnapshotIn extends SnapshotIn<typeof AuthenticationStoreModel> { }
+// export const createAuthenticationStoreDefaultModel = () => types.optional(AuthenticationStoreModel, {})

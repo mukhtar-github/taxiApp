@@ -1,6 +1,6 @@
 import { Instance, SnapshotIn, SnapshotOut, types, flow } from "mobx-state-tree"
 import { withSetPropAction } from "./helpers/withSetPropAction"
-import { BookingModel } from "./Booking"
+import { createBookingDefaultModel } from "./Booking"
 import { auth, db, functions } from "../firebase/config";
 import { collection, addDoc, } from "firebase/firestore";
 
@@ -11,7 +11,7 @@ import { collection, addDoc, } from "firebase/firestore";
 // Define the BookingStore model
 export const BookingStoreModel = types
   .model("BookingStore", {
-    booking: BookingModel,
+    booking: createBookingDefaultModel(),
   })
   .props({})
   .actions(withSetPropAction)

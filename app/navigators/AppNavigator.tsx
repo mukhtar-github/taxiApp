@@ -10,10 +10,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator, NativeStackScreenProps } from "@react-navigation/native-stack";
 import { observer } from "mobx-react-lite";
 import { useStores } from "app/models";
-import { WelcomeScreen, LoginScreen, RegisterScreen, HomeScreen } from "app/screens";
+import { WelcomeScreen, LoginScreen, RegisterScreen, HomeScreen, ConfirmationScreen } from "app/screens";
 import Config from "../config";
-
-
 
 // Define the navigation stack types
 type AuthStackParamList = {
@@ -24,6 +22,7 @@ type AuthStackParamList = {
 
 type HomeStackParamList = {
   Home: undefined;
+  Confirmation: undefined;
 };
 
 export type AppStackParamList = {
@@ -34,7 +33,6 @@ export type AppStackParamList = {
   Home: undefined;
 	TermsAndConditions: undefined
 	Confirmation: undefined
-	Booking: undefined
 	// IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
 };
 
@@ -56,6 +54,7 @@ export const AppStack = observer(() => {
      {isAuthenticated ? ( // If the user is authenticated, show the home stack*
       <HomeStack.Navigator>
         <HomeStack.Screen name="Home" component={HomeScreen} />
+        <HomeStack.Screen name="Confirmation" component={ConfirmationScreen} />
       </HomeStack.Navigator> ) : ( // If the user is not authenticated, show the auth stack
       <AuthStack.Navigator>
         <AuthStack.Screen name="Welcome" component={WelcomeScreen} />
@@ -77,83 +76,3 @@ export const AppNavigator = observer(function AppNavigator(props: NavigationProp
     </NavigationContainer>
   )
 })
-
-
-
-
-
-// import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native"
-// import { createNativeStackNavigator, NativeStackScreenProps } from "@react-navigation/native-stack"
-// import { observer } from "mobx-react-lite"
-// import React from "react"
-// import { useColorScheme } from "react-native"
-// import Config from "../config"
-// import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
-// import { WelcomeScreen, LoginScreen, RegisterScreen, HomeScreen } from "app/screens"
-// import { useStores } from "app/models"
-// import { AuthenticationStore } from "app/models"
-// import { createStackNavigator } from "@react-navigation/stack";
-
-/**
- * This type allows TypeScript to know what routes are defined in this navigator
- * as well as what properties (if any) they might take when navigating to them.
- *
- * If no params are allowed, pass through `undefined`. Generally speaking, we
- * recommend using your MobX-State-Tree store(s) to keep application state
- * rather than passing state through navigation params.
- *
- * For more information, see this documentation:
- *   https://reactnavigation.org/docs/params/
- *   https://reactnavigation.org/docs/typescript#type-checking-the-navigator
- *   https://reactnavigation.org/docs/typescript/#organizing-types
- */
-
-
-// export type AppStackParamList = {
-//   // 🔥 Your screens go here
-//  Welcome: undefined;
-//   Booking: { destination: string };
-//   Login: undefined;
-//   Register: undefined;
-//   Home: undefined;
-//   TermsAndConditions: undefined;
-// 	// IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
-// }
-
-/**
- * This is a list of all the route names that will exit the app if the back button
- * is pressed while in that screen. Only affects Android.
- */
-
-// export type AppStackScreenProps<T extends keyof AppStackParamList> = NativeStackScreenProps<
-//   AppStackParamList,
-//   T
-// >
-
-// // Documentation: https://reactnavigation.org/docs/stack-navigator/
-
-// const Stack = createNativeStackNavigator<AppStackParamList>()
-
-// const AppStack = observer(function AppStack() {
-//   const {
-//     authenticationStore: { isAuthenticated },
-//   } = useStores()
-
-//   console.log("isAuthenticated:", isAuthenticated)
-
-//   return (
-//      <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName={isAuthenticated ? "Home" : "Welcome"} >
-//       {isAuthenticated ? (
-//         // Show home screen after user is authenticated
-//         <Stack.Screen name="Home" component={HomeScreen} />
-//       ) : (
-//         // Show welcome screen as initial screen
-//         <>
-//           <Stack.Screen name="Welcome" component={WelcomeScreen} />
-//           <Stack.Screen name="Login" component={LoginScreen} />
-//           <Stack.Screen name="Register" component={RegisterScreen} />
-//         </>
-//       )}
-//     </Stack.Navigator>
-//   )
-// })

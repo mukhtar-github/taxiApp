@@ -7,16 +7,16 @@ import { withSetPropAction } from "./helpers/withSetPropAction"
 // Define a route model with the predefined options and the price
 export const BookingModel = types
   .model("Booking", {
-    id: types.identifier,
-    fromCity: types.optional(types.string, "New York"),
-    fromLocation: types.optional(types.string, "Times Square"),
-    toCity: types.optional(types.string, "Boston"),
-    toLocation: types.optional(types.string, "Harvard Square"),
-    vehicleType: types.optional(types.string, "Car"),
-    seatNumber: types.optional(types.number, 2),
-    departureDate: types.optional(types.string, "2022-01-31"),
-    departureTime: types.optional(types.string, "10:00 AM"),
-    price: types.optional(types.number, 50), // Add price to the route object
+    id: types.maybe(types.number),
+    fromCity: types.maybe(types.string),
+    fromLocation: types.maybe(types.string),
+    toCity: types.maybe(types.string),
+    toLocation: types.maybe(types.string),
+    vehicleType: types.maybe(types.string),
+    seatNumber: types.maybe(types.number),
+    departureDate: types.maybe(types.string),
+    departureTime: types.maybe(types.string),
+    price: types.maybe(types.number)
   })
   .props({})
   .actions(withSetPropAction)
@@ -26,5 +26,16 @@ export const BookingModel = types
 export interface Booking extends Instance<typeof BookingModel> { }
 export interface BookingSnapshotOut extends SnapshotOut<typeof BookingModel> { }
 export interface BookingSnapshotIn extends SnapshotIn<typeof BookingModel> { }
-export const createBookingDefaultModel = () => types.optional(BookingModel, {})
+export const createBookingDefaultModel = () => types.optional(BookingModel, {
+  id: 0,
+  fromCity: "New York",
+  fromLocation: "Times Square",
+  toCity: "",
+  toLocation: "",
+  vehicleType: "",
+  seatNumber: 0,
+  departureDate: "",
+  departureTime: "",
+  price: 0,
+})
 

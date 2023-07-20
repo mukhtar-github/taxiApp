@@ -1,8 +1,7 @@
 import React, { FC, useState, useEffect } from "react";
-import { Picker } from '@react-native-picker/picker';
-import { AppStackParamList } from "app/navigators"
-import { NativeStackScreenProps } from "@react-navigation/native-stack"
-import { useStores } from "app/models"
+import { MyDropDownPicker } from "../components/MyDropDownPicker";
+import { AppStackParamList } from "app/navigators";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { View, Text, Button, StyleSheet } from "react-native";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -10,7 +9,8 @@ import { observer } from "mobx-react-lite";
 import { useLocalObservable } from "mobx-react-lite";
 import { onSnapshot, applySnapshot } from "mobx-state-tree";
 import { bookingStore } from "../models/BookingStore";
-import { useNavigation } from "@react-navigation/native";
+// import { useStores } from "app/models";
+// import { useNavigation } from "@react-navigation/native";
 
 // Define a validation schema for the form
 const PickerSchema = Yup.object().shape({
@@ -24,7 +24,10 @@ const PickerSchema = Yup.object().shape({
   departureTime: Yup.string().required("Select Departure Time"),
 });
 
-export const HomeScreen: FC<NativeStackScreenProps<AppStackParamList, "Home">> = observer(({ navigation }) => {
+export const HomeScreen: FC<NativeStackScreenProps<
+  AppStackParamList,
+  "Home"
+>> = observer(({ navigation }) => {
   // Create a local observable copy of the booking store
   const localStore = useLocalObservable(() => bookingStore);
 
@@ -43,7 +46,16 @@ export const HomeScreen: FC<NativeStackScreenProps<AppStackParamList, "Home">> =
 
   // Use formik to create a form with the booking object as initial values
   const formik = useFormik({
-    initialValues: booking,
+    initialValues: {
+      fromCity: "New York", // Set the initial value for fromCity as an array of values
+      fromLocation: "",
+      toCity: "",
+      toLocation: "",
+      vehicleType: "",
+      seatNumber: 0,
+      departureDate: new Date(),
+      departureTime: "",
+    },
     validationSchema: PickerSchema,
     onSubmit: async (values) => {
       // Save the values to Firestore using the local store action
@@ -59,147 +71,157 @@ export const HomeScreen: FC<NativeStackScreenProps<AppStackParamList, "Home">> =
     <View style={styles.container}>
       <Text style={styles.title}>Book Your Ride</Text>
       <View style={styles.form}>
-        <Text style={styles.label}>From City</Text>
-        <Picker
-          selectedValue={formik.values.fromCity}
-          onValueChange={(itemValue) =>
-            formik.setFieldValue("fromCity", itemValue)
-          }
-          mode="dropdown"
-          style={styles.picker}
-        >
-          {["New York", "Boston", "Chicago", "Los Angeles"].map((item) => (
-            <Picker.Item key={item} label={item} value={item} />
-          ))}
-        </Picker>
+        {/* Apply the formControl style to each View component that wraps a label and a dropdown */}
+        <View style={styles.formControl}>
+          <Text style={styles.label}>From City</Text>
+          {/* Replace Picker component with DropDownPicker component and pass appropriate props */}
+          <MyDropDownPicker
+            items={["New York", "Boston", "Chicago", "Los Angeles"].map((item) => ({
+              label: item,
+              value: item,
+            }))}
+            value={formik.values.fromCity} // No need to wrap in square brackets
+            setValue={(callback) => {
+              const currentValue = formik.values.fromCity;
+              const newValue = callback(currentValue);
+              formik.setFieldValue("fromCity", newValue);
+            }}
+            containerStyle={{ height: 40 }}
+            style={styles.picker}
+            multiple={true} // Set multiple prop to true
+          />
+        </View>
         {formik.errors.fromCity && (
           <Text style={styles.error}>{formik.errors.fromCity}</Text>
         )}
-        <Text style={styles.label}>From Location</Text>
-        <Picker
-          selectedValue={formik.values.fromLocation}
-          onValueChange={(itemValue) =>
-            formik.setFieldValue("fromLocation", itemValue)
-          }
-          mode="dropdown"
-          style={styles.picker}
-        >
-          {["Times Square", "Central Park", "Empire State Building", "Brooklyn Bridge"].map(
-            (item) => (
-              <Picker.Item key={item} label={item} value={item} />
-            )
-          )}
-        </Picker>
+        <View style={styles.formControl}>
+          <Text style={styles.label}>From Location</Text>
+          {/* Replace Picker component with DropDownPicker component and pass appropriate props */}
+          <MyDropDownPicker
+            items={[
+              "Times Square",
+              "Central Park",
+              "Empire State Building",
+              "Brooklyn Bridge",
+            ].map((item) => ({
+              label: item,
+              value: item,
+            }))}
+            value={formik.values.fromLocation} // No need to wrap in square brackets
+            setValue={(callback) => {
+              const currentValue = formik.values.fromLocation;
+              const newValue = callback(currentValue);
+              formik.setFieldValue("fromLocation", newValue);
+            }}
+            containerStyle={{ height: 40 }}
+            style={styles.picker}
+            multiple={true} // Set multiple prop to true
+          />
+        </View>
         {formik.errors.fromLocation && (
           <Text style={styles.error}>{formik.errors.fromLocation}</Text>
         )}
-        <Text style={styles.label}>To City</Text>
-        <Picker
-          selectedValue={formik.values.toCity}
-          onValueChange={(itemValue) =>
-            formik.setFieldValue("toCity", itemValue)
-          }
-          mode="dropdown"
-          style={styles.picker}
-        >
-          {["New York", "Boston", "Chicago", "Los Angeles"].map((item) => (
-            <Picker.Item key={item} label={item} value={item} />
-          ))}
-        </Picker>
+        <View style={styles.formControl}>
+          <Text style={styles.label}>To City</Text>
+          {/* Replace Picker component with DropDownPicker component and pass appropriate props */}
+          <MyDropDownPicker
+            items={["New York", "Boston", "Chicago", "Los Angeles"].map(
+              (item) => ({
+                label: item,
+                value: item,
+              })
+            )}
+            value={formik.values.toCity} // No need to wrap in square brackets
+            setValue={(callback) => {
+              const currentValue = formik.values.toCity;
+              const newValue = callback(currentValue);
+              formik.setFieldValue("toCity", newValue);
+            }}
+            containerStyle={{ height: 40 }}
+            style={styles.picker}
+            multiple={true} // Set multiple prop to true
+          />
+        </View>
         {formik.errors.toCity && (
           <Text style={styles.error}>{formik.errors.toCity}</Text>
         )}
-        <Text style={styles.label}>To Location</Text>
-        <Picker
-          selectedValue={formik.values.toLocation}
-          onValueChange={(itemValue) =>
-            formik.setFieldValue("toLocation", itemValue)
-          }
-          mode="dropdown"
-          style={styles.picker}
-        >
-          {["Harvard Square", "Fenway Park", "Freedom Trail", "Boston Common"].map(
-            (item) => (
-              <Picker.Item key={item} label={item} value={item} />
-            )
-          )}
-        </Picker>
+        <View style={styles.formControl}>
+          <Text style={styles.label}>To Location</Text>
+          {/* Replace Picker component with DropDownPicker component and pass appropriate props */}
+          <MyDropDownPicker
+            items={[
+              "Harvard Square",
+              "Fenway Park",
+              "Freedom Trail",
+              "Boston Common",
+            ].map((item) => ({
+              label: item,
+              value: item,
+            }))}
+            value={formik.values.toLocation} // No need to wrap in square brackets
+            setValue={(callback) => {
+              const currentValue = formik.values.toLocation;
+              const newValue = callback(currentValue);
+              formik.setFieldValue("toLocation", newValue);
+            }}
+            containerStyle={{ height: 40 }}
+            style={styles.picker}
+            multiple={true} // Set multiple prop to true
+          />
+        </View>
         {formik.errors.toLocation && (
           <Text style={styles.error}>{formik.errors.toLocation}</Text>
         )}
-        <Text style={styles.label}>Vehicle Type</Text>
-        <Picker
-          selectedValue={formik.values.vehicleType}
-          onValueChange={(itemValue) =>
-            formik.setFieldValue("vehicleType", itemValue)
-          }
-          mode="dropdown"
-          style={styles.picker}
-        >
-          {["Car", "Bus", "Train"].map((item) => (
-            <Picker.Item key={item} label={item} value={item} />
-          ))}
-        </Picker>
+        <View style={styles.formControl}>
+          <Text style={styles.label}>Vehicle Type</Text>
+          {/* Replace Picker component with DropDownPicker component and pass appropriate props */}
+          <MyDropDownPicker
+            items={["Car", "Bus", "Train"].map((item) => ({
+              label: item,
+              value: item,
+            }))}
+            value={formik.values.vehicleType} // No need to wrap in square brackets
+            setValue={(callback) => {
+              const currentValue = formik.values.vehicleType;
+              const newValue = callback(currentValue);
+              formik.setFieldValue("vehicleType", newValue);
+            }}
+            containerStyle={{ height: 40 }}
+            style={styles.picker}
+            multiple={true} // Set multiple prop to true
+          />
+        </View>
         {formik.errors.vehicleType && (
           <Text style={styles.error}>{formik.errors.vehicleType}</Text>
         )}
-        <Text style={styles.label}>Seat Number</Text>
-        <Picker
-          selectedValue={formik.values.seatNumber}
-          onValueChange={(itemValue) =>
-            formik.setFieldValue("seatNumber", itemValue)
-          }
-          mode="dropdown"
-          style={styles.picker}
-        >
-          {[1, 2, 3, 4].map((item) => (
-            <Picker.Item key={item} label={`${item}`} value={item} />
-          ))}
-        </Picker>
+        <View style={styles.formControl}>
+          <Text style={styles.label}>Seat Number</Text>
+          {/* Replace Picker component with DropDownPicker component and pass appropriate props */}
+          <MyDropDownPicker
+            items={[1, 2, 3, 4].map((item) => ({
+              label: item.toString(),
+              value: item,
+            }))}
+            value={formik.values.seatNumber} // No need to wrap in square brackets
+            setValue={(callback) => {
+              const currentValue = formik.values.seatNumber;
+              const newValue = callback(currentValue);
+              formik.setFieldValue("seatNumber", newValue);
+            }}
+            containerStyle={{ height: 40 }}
+            style={styles.picker}
+            multiple={true} // Set multiple prop to true
+          />
+        </View>
         {formik.errors.seatNumber && (
           <Text style={styles.error}>{formik.errors.seatNumber}</Text>
         )}
-        <Text style={styles.label}>Departure Date</Text>
-        <Picker
-          selectedValue={formik.values.departureDate}
-          onValueChange={(itemValue) =>
-            formik.setFieldValue("departureDate", itemValue)
-          }
-          mode="dropdown"
-          style={styles.picker}
-        >
-          {["2022-01-31", "2022-02-01", "2022-02-02", "2022-02-03"].map(
-            (item) => (
-              <Picker.Item key={item} label={item} value={item} />
-            )
-          )}
-        </Picker>
-        {formik.errors.departureDate && (
-          <Text style={styles.error}>{formik.errors.departureDate}</Text>
-        )}
-        <Text style={styles.label}>Departure Time</Text>
-        <Picker
-          selectedValue={formik.values.departureTime}
-          onValueChange={(itemValue) =>
-            formik.setFieldValue("departureTime", itemValue)
-          }
-          mode="dropdown"
-          style={styles.picker}
-        >
-          {["10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM"].map((item) => (
-            <Picker.Item key={item} label={item} value={item} />
-          ))}
-        </Picker>
-        {formik.errors.departureTime && (
-          <Text style={styles.error}>{formik.errors.departureTime}</Text>
-        )}
       </View>
-      <View style={{ backgroundColor: "#3498db" }}>
       <Button
         title="Book Now"
-        onPress={(event) => formik.handleSubmit()}
+        onPress={() => formik.handleSubmit()}
+        disabled={!formik.isValid || !formik.dirty}
       />
-      </View>
     </View>
   );
 });
@@ -218,6 +240,12 @@ const styles = StyleSheet.create({
   form: {
     flex: 1,
   },
+  // Add a formControl style to wrap each form element
+  formControl: {
+    flexDirection: "row", // Use row direction to align label and dropdown horizontally
+    alignItems: "center", // Use center alignment to align label and dropdown vertically
+    marginVertical: 8, // Add some vertical margin for spacing
+  },
   label: {
     fontSize: 18,
     fontWeight: "bold",
@@ -227,15 +255,11 @@ const styles = StyleSheet.create({
     height: 40,
     borderWidth: 1,
     borderColor: "gray",
+    flex: 2, // Use flex to make the picker take up twice as much space as the label
   },
   error: {
     fontSize: 16,
     color: "red",
     marginVertical: 8,
   },
-  button: {
-    backgroundColor: "#3498db",
-  },
 });
-
-
